@@ -14,6 +14,7 @@ class CompressioniScreen extends StatefulWidget {
 class _CompressioniScreenState extends State<CompressioniScreen> {
   int count = 0;
   bool insufflazioniOn = false;
+  String buttonText = 'Chiama 112';
 
   void incrementCount() {
     setState(() {
@@ -24,8 +25,7 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
         if (insufflazioniOn) {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => (const VentilazioniScreen())),
+            MaterialPageRoute(builder: (context) => const VentilazioniScreen()),
           );
         } else {
           Navigator.push(
@@ -38,49 +38,59 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
     });
   }
 
+  void _onButtonPressed() {
+    setState(() {
+      buttonText = 'Chiamata in corso...';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Compressioni',
-              style:
-                  TextStyle(color: AppConfig.textInTitlesColor, fontSize: 24),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(
+              20.0), 
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Compressioni',
+                  style: TextStyle(
+                      color: AppConfig.textInTitlesColor, fontSize: 20),
+                ),
+                Text(
+                  '$count/30',
+                  style: const TextStyle(
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                    color: AppConfig.textInTitlesColor,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: _onButtonPressed,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  child: Text(
+                    buttonText,
+                    style: const TextStyle(color: AppConfig.textInButtonsColor),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ToggleButton(
+                  onChanged: (value) {
+                    setState(() {
+                      insufflazioniOn = value;
+                    });
+                  },
+                ),
+              ],
             ),
-            Text(
-              '$count/30',
-              style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
-                  color: AppConfig.textInTitlesColor),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                incrementCount();
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              child: const Text(
-                'Chiama 112',
-                style: const TextStyle(color: AppConfig.textInButtonsColor),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ToggleButton(
-              onChanged: (value) {
-                setState(() {
-                  insufflazioniOn = value;
-                });
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );
