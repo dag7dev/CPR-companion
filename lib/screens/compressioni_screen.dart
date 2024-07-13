@@ -19,7 +19,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
     with WidgetsBindingObserver {
   void _stopMetronome() async {
     _isPlaying = false;
-    await _audioPlayer.stop();
+    await audioPlayer.stop();
   }
 
   void loadInsufflazioniPreference() async {
@@ -34,7 +34,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
   String buttonText = 'Chiama 112';
   double lastZ = 0.0;
   double previousZ = 0.0;
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayer = AudioPlayer();
   bool _isPlaying = false;
   bool isCalling = false; // Variabile per tracciare lo stato della chiamata
 
@@ -74,7 +74,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
     WidgetsBinding.instance.removeObserver(this);
     _isPlaying = false;
     _stopMetronome();
-    _audioPlayer.dispose();
+    audioPlayer.dispose();
     super.dispose();
   }
 
@@ -82,17 +82,17 @@ class _CompressioniScreenState extends State<CompressioniScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive) {
-      _audioPlayer.stop();
+      audioPlayer.stop();
     } else if (state == AppLifecycleState.resumed && _isPlaying) {
-      _audioPlayer.resume();
+      audioPlayer.resume();
     }
   }
 
   void _startMetronome() async {
-    await _audioPlayer.setSource(AssetSource('audio/click.mp3'));
-    _audioPlayer.setReleaseMode(ReleaseMode.loop);
+    await audioPlayer.setSource(AssetSource('audio/click.mp3'));
+    audioPlayer.setReleaseMode(ReleaseMode.loop);
     _isPlaying = true;
-    await _audioPlayer.resume();
+    await audioPlayer.resume();
 
     // Vibrazione a 104 BPM
     while (_isPlaying) {
@@ -109,8 +109,6 @@ class _CompressioniScreenState extends State<CompressioniScreen>
       count++;
       if (count >= AppConfig.compressionsCount) {
         count = 0;
-        _playCompletionSound();
-        _vibrateLong();
         _stopMetronome();
 
         if (insufflazioniOn) {
@@ -148,8 +146,8 @@ class _CompressioniScreenState extends State<CompressioniScreen>
   }
 
   void _playCompletionSound() async {
-    await _audioPlayer.setSource(AssetSource('audio/click2.mp3'));
-    await _audioPlayer.resume();
+    await audioPlayer.setSource(AssetSource('audio/click2.mp3'));
+    await audioPlayer.resume();
   }
 
   void _vibrateLong() async {

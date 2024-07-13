@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../app_config.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:vibration/vibration.dart';
 
 class VentilazioniScreen extends StatefulWidget {
   const VentilazioniScreen({Key? key}) : super(key: key);
@@ -12,17 +14,36 @@ class VentilazioniScreen extends StatefulWidget {
 class _VentilazioniScreenState extends State<VentilazioniScreen> {
   int countdown = AppConfig.countdownSeconds;
   late Timer _timer;
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
     startCountdown();
+    _startMetronome();
+    _vibrateLong();
+  }
+
+  void _vibrateLong() async {
+    if (await Vibration.hasVibrator() != null) {
+      await Vibration.vibrate(duration: 1000);
+    }
+  }
+
+  void _startMetronome() async {
+    await audioPlayer.setSource(AssetSource('audio/click2.mp3'));
+    audioPlayer.setReleaseMode(ReleaseMode.release);
+    await audioPlayer.resume();
+  }
+
+  void _stopMetronome() async {
+    await audioPlayer.stop();
   }
 
   @override
   void dispose() {
     _timer
-        .cancel(); // Assicurati di cancellare il timer quando il widget viene eliminato
+        .cancel();
     super.dispose();
   }
 
