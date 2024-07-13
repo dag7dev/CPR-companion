@@ -61,6 +61,9 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
       count++;
       if (count >= AppConfig.compressionsCount) {
         count = 0;
+        _playCompletionSound(); // Chiama il metodo per riprodurre il suono
+        _vibrateLong(); // Chiama il metodo per la vibrazione
+
         if (insufflazioniOn) {
           Navigator.push(
             context,
@@ -75,6 +78,17 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
         }
       }
     });
+  }
+
+  void _playCompletionSound() async {
+    await _audioPlayer.setSource(AssetSource('audio/click2.mp3'));
+    await _audioPlayer.resume();
+  }
+
+  void _vibrateLong() async {
+    if (await Vibration.hasVibrator() != null) {
+      await Vibration.vibrate(duration: 1000); // vibra per 1000 millisecondi
+    }
   }
 
   void _onButtonPressed() {
