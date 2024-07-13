@@ -12,6 +12,7 @@ class VentilazioniScreen extends StatefulWidget {
 }
 
 class _VentilazioniScreenState extends State<VentilazioniScreen> {
+  String buttonText = 'Finito';
   int countdown = AppConfig.countdownSeconds;
   late Timer _timer;
   AudioPlayer audioPlayer = AudioPlayer();
@@ -40,13 +41,6 @@ class _VentilazioniScreenState extends State<VentilazioniScreen> {
     await audioPlayer.stop();
   }
 
-  @override
-  void dispose() {
-    _timer
-        .cancel();
-    super.dispose();
-  }
-
   void startCountdown() {
     const oneSecond = Duration(seconds: 1);
     _timer = Timer.periodic(oneSecond, (timer) {
@@ -56,53 +50,80 @@ class _VentilazioniScreenState extends State<VentilazioniScreen> {
         });
       } else {
         timer.cancel();
+        _stopMetronome();
         Navigator.pushNamed(context, '/pre_compressioni_screen');
       }
     });
   }
 
   @override
+  void dispose() {
+    _timer.cancel();
+    _stopMetronome();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              'Insufflazioni',
-              style:
-                  TextStyle(color: AppConfig.textInTitlesColor, fontSize: 24),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  'Insufflazioni',
+                  style: TextStyle(
+                    fontSize: 16,
+                    height: 0.85,
+                    color: AppConfig.textInTitlesColor,
+                  ),
+                ),
+                CountdownWidget(countdown: countdown),
+                Image.asset(
+                  'assets/images/ventilazioni.png',
+                  width: 90,
+                  height: 50,
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    _timer.cancel();
+                    _stopMetronome();
+                    Navigator.pushNamed(context, '/pre_compressioni_screen');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
+                  child: Text(
+                    buttonText,
+                    style: const TextStyle(color: AppConfig.textInButtonsColor),
+                  ),
+                ),
+              ],
             ),
-            Text(
-              '00:${'$countdown'.toString().padLeft(2, '0')}',
-              style: const TextStyle(
-                  fontSize: 48, color: AppConfig.textInTitlesColor),
-            ),
-            Image.asset(
-              'assets/images/ventilazioni.png',
-              width: 90,
-              height: 50,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // stop timer
-                _timer.cancel();
-                Navigator.pushNamed(context, '/pre_compressioni_screen');
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                minimumSize: const Size(double.infinity, 50),
-              ),
-              child: const Text(
-                'Finito',
-                style: TextStyle(color: AppConfig.textInButtonsColor),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+}
+
+class CountdownWidget extends StatelessWidget {
+  final int countdown;
+
+  const CountdownWidget({Key? key, required this.countdown}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      '00:${'$countdown'.toString().padLeft(2, '0')}',
+      style: const TextStyle(fontSize: 40, color: AppConfig.textInButtonsColor),
     );
   }
 }
