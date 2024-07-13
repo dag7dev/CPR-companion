@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - master
-    tags:
-      - "v*.*.*"
   workflow_dispatch: 
 
 jobs:
@@ -14,8 +12,8 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
-      
+      uses: actions/checkout@v2
+
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
@@ -28,7 +26,7 @@ jobs:
       run: flutter build apk --release
 
     - name: Upload APK to release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v1
       with:
         files: build/app/outputs/flutter-apk/app-release.apk
       env:
