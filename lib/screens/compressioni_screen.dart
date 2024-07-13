@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cpr/screens/pre_compressioni_screen.dart';
 import 'ventilazioni_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sensors_plus/sensors_plus.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:vibration/vibration.dart';
 import '../app_config.dart';
 
 class CompressioniScreen extends StatefulWidget {
@@ -15,11 +18,47 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
   int count = 0;
   bool insufflazioniOn = false;
   String buttonText = 'Chiama 112';
+  double lastZ = 0.0;
+  double previousZ = 0.0;
+  final AudioPlayer _audioPlayer = AudioPlayer();
+  bool _isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startMetronome();
+    accelerometerEvents.listen((AccelerometerEvent event) {
+      if ((lastZ - event.z).abs() > 3.0) {
+        if (event.z < lastZ) {
+          previousZ = lastZ;
+        } else if (event.z > previousZ) {
+          incrementCount();
+          previousZ = event.z;
+        }
+      }
+      lastZ = event.z;
+    });
+  }
+
+  void _startMetronome() async {
+    await _audioPlayer.setSource(AssetSource('audio/click.mp3'));
+    _audioPlayer.setReleaseMode(ReleaseMode.loop);
+    _isPlaying = true;
+    await _audioPlayer.resume();
+
+    // Vibrazione a 104 BPM
+    while (_isPlaying) {
+      if (await Vibration.hasVibrator() != null) {
+        await Vibration.vibrate(duration: 100);
+      }
+      await Future.delayed(
+          Duration(milliseconds: 573)); // 60000ms / 104 BPM ≈ 576ms
+    }
+  }
 
   void incrementCount() {
     setState(() {
       count++;
-
       if (count >= AppConfig.compressionsCount) {
         count = 0;
         if (insufflazioniOn) {
@@ -45,13 +84,19 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
   }
 
   @override
+  void dispose() {
+    _isPlaying = false;
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(
-              20.0), 
+          padding: const EdgeInsets.all(20.0),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
