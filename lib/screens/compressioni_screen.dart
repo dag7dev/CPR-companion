@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
+import 'dart:async'; // Importa la libreria dart:async per Timer
 import '../app_config.dart';
 
 class CompressioniScreen extends StatefulWidget {
@@ -22,6 +23,7 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
   double previousZ = 0.0;
   final AudioPlayer _audioPlayer = AudioPlayer();
   bool _isPlaying = false;
+  bool isCalling = false; // Variabile per tracciare lo stato della chiamata
 
   @override
   void initState() {
@@ -93,7 +95,18 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
 
   void _onButtonPressed() {
     setState(() {
-      buttonText = 'Chiamata in corso...';
+      if (!isCalling) {
+        buttonText = 'Chiamata in corso...';
+        isCalling = true;
+        Timer(const Duration(seconds: 3), () {
+          setState(() {
+            buttonText = 'Chiudi chiamata';
+          });
+        });
+      } else {
+        buttonText = 'Chiama 112';
+        isCalling = false;
+      }
     });
   }
 
@@ -131,7 +144,7 @@ class _CompressioniScreenState extends State<CompressioniScreen> {
                 ElevatedButton(
                   onPressed: _onButtonPressed,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Colors.red,
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: Text(
