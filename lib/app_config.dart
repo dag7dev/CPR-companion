@@ -9,5 +9,8 @@ class AppConfig {
   // color
   static const Color textInButtonsColor = Colors.white;
   static const Color textInTitlesColor = Colors.white;
-  
+
+  // Internal variables in the app
+  static bool debugMetronome = false;
+  static bool insufflazioni = false;
 }
