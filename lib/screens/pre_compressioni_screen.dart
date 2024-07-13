@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cpr/app_config.dart';
 import 'compressioni_screen.dart';
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:vibration/vibration.dart';
 
 class PreCompressioniScreen extends StatefulWidget {
   const PreCompressioniScreen({super.key});
@@ -79,12 +81,31 @@ class CountdownWidget extends StatefulWidget {
 
 class _CountdownWidgetState extends State<CountdownWidget> {
   int countdown = AppConfig.countdownSeconds;
+  AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     countdown = AppConfig.countdownSeconds;
     super.initState();
     startCountdown();
+    _startMetronome();
+    _vibrateLong();
+  }
+
+  void _vibrateLong() async {
+    if (await Vibration.hasVibrator() != null) {
+      await Vibration.vibrate(duration: 1000);
+    }
+  }
+
+  void _startMetronome() async {
+    await audioPlayer.setSource(AssetSource('audio/click2.mp3'));
+    audioPlayer.setReleaseMode(ReleaseMode.release);
+    await audioPlayer.resume();
+  }
+
+  void _stopMetronome() async {
+    await audioPlayer.stop();
   }
 
   void startCountdown() {
@@ -96,8 +117,9 @@ class _CountdownWidgetState extends State<CountdownWidget> {
         });
       } else {
         timer.cancel();
-        // Naviga alla nuova schermata quando il countdown è completato
-        Navigator.push(
+        _stopMetronome();
+
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const CompressioniScreen()),
         );
