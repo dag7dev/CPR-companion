@@ -3,8 +3,22 @@ import 'chiama_ambulanza_screen.dart';
 import 'pre_compressioni_screen.dart';
 import 'package:cpr/app_config.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool isToggleEnabled = AppConfig.debugMetronome;
+
+  void _toggleSwitch(bool value) {
+    setState(() {
+      isToggleEnabled = value;
+      AppConfig.debugMetronome = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +67,21 @@ class HomeScreen extends StatelessWidget {
                       backgroundColor: Colors.red.shade900),
                   child: const Text('No',
                       style: TextStyle(color: AppConfig.textInButtonsColor)),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'AutoCPR',
+                  style: TextStyle(color: AppConfig.textInTitlesColor),
+                ),
+                Switch(
+                  value: isToggleEnabled,
+                  onChanged: _toggleSwitch,
+                  activeColor: Colors.green,
+                  inactiveThumbColor: Colors.grey,
                 ),
               ],
             ),
