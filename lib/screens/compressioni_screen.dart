@@ -99,8 +99,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
       if (await Vibration.hasVibrator() != null) {
         await Vibration.vibrate(duration: 100);
       }
-      await Future.delayed(
-          Duration(milliseconds: 573)); // 60000ms / 104 BPM ≈ 576ms
+      await Future.delayed(Duration(milliseconds: 573));
     }
   }
 
@@ -183,7 +182,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
                 ElevatedButton(
                   onPressed: _onButtonPressed,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.red.shade900,
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: Text(
