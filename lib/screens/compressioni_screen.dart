@@ -188,23 +188,26 @@ class _ToggleButtonState extends State<ToggleButton> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          insufflazioni = !insufflazioni;
-          widget.onChanged(insufflazioni);
-          savePreferences(insufflazioni);
-        });
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor:
-            insufflazioni ? Colors.green.shade700 : Colors.grey.shade900,
-        minimumSize: const Size(double.infinity, 50),
-      ),
-      child: Text(
-        'Insufflazioni ${insufflazioni ? 'On' : 'Off'}',
-        style: const TextStyle(color: AppConfig.textInButtonsColor),
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Insufflazioni',
+          style: TextStyle(color: AppConfig.textInButtonsColor),
+        ),
+        Switch(
+          value: insufflazioni,
+          onChanged: (value) {
+            setState(() {
+              insufflazioni = value;
+              widget.onChanged(insufflazioni);
+              savePreferences(insufflazioni);
+            });
+          },
+          activeColor: Colors.green,
+          inactiveThumbColor: Colors.grey,
+        ),
+      ],
     );
   }
 }
