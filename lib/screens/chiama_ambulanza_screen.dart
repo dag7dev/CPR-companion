@@ -50,7 +50,7 @@ class _ChiamaAmbulanzaScreenState extends State<ChiamaAmbulanzaScreen> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade900,
+                    backgroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: Text(
@@ -58,7 +58,7 @@ class _ChiamaAmbulanzaScreenState extends State<ChiamaAmbulanzaScreen> {
                     textAlign: TextAlign.center,
                     maxLines: maxLines,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: AppConfig.textInButtonsColor),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
                 const SizedBox(height: 20),
