@@ -46,7 +46,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
     if (AppConfig.debugMetronome) {
       _startMetronome();
 
-      Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      Timer.periodic(const Duration(milliseconds: 574), (Timer timer) {
         if (_isPlaying) {
           incrementCount();
         } else {
@@ -56,7 +56,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
     } else {
       _startMetronome();
       accelerometerEvents.listen((AccelerometerEvent event) {
-        if ((lastZ - event.z).abs() > 3.0) {
+        if ((lastZ - event.z).abs() > 6.0) {
           if (event.z < lastZ) {
             previousZ = lastZ;
           } else if (event.z > previousZ) {
@@ -99,7 +99,7 @@ class _CompressioniScreenState extends State<CompressioniScreen>
       if (await Vibration.hasVibrator() != null) {
         await Vibration.vibrate(duration: 100);
       }
-      await Future.delayed(Duration(milliseconds: 573));
+      await Future.delayed(Duration(milliseconds: 574));
     }
   }
 
@@ -182,12 +182,12 @@ class _CompressioniScreenState extends State<CompressioniScreen>
                 ElevatedButton(
                   onPressed: _onButtonPressed,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade900,
+                    backgroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: Text(
                     buttonText,
-                    style: const TextStyle(color: AppConfig.textInButtonsColor),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
                 const SizedBox(height: 10),

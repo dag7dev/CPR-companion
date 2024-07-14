@@ -13,7 +13,7 @@ class VentilazioniScreen extends StatefulWidget {
 
 class _VentilazioniScreenState extends State<VentilazioniScreen> {
   String buttonText = 'Finito';
-  int countdown = AppConfig.countdownSeconds;
+  int countdown = 10;
   late Timer _timer;
   AudioPlayer audioPlayer = AudioPlayer();
 
