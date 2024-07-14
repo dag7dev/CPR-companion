@@ -52,7 +52,7 @@ class _PreCompressioniScreenState extends State<PreCompressioniScreen> {
                     });
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red.shade900,
+                    backgroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 50),
                   ),
                   child: Text(
@@ -60,7 +60,7 @@ class _PreCompressioniScreenState extends State<PreCompressioniScreen> {
                     textAlign: TextAlign.center,
                     maxLines: maxLines,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: AppConfig.textInButtonsColor),
+                    style: const TextStyle(color: Colors.red),
                   ),
                 ),
               ],
@@ -80,12 +80,12 @@ class CountdownWidget extends StatefulWidget {
 }
 
 class _CountdownWidgetState extends State<CountdownWidget> {
-  int countdown = AppConfig.countdownSeconds;
+  int countdown = 5;
   AudioPlayer audioPlayer = AudioPlayer();
 
   @override
   void initState() {
-    countdown = AppConfig.countdownSeconds;
+    countdown = 5;
     super.initState();
     startCountdown();
     _startMetronome();
